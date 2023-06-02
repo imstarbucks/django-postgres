@@ -1,5 +1,5 @@
 Django==4.2.1
 psycopg2-binary==2.9.1
-djangorestframework==3.14  # Django REST framework for building APIs
-djangorestframework-jsonapi==6.0.0
+djangorestframework  # Django REST framework for building APIs
+djangorestframework-jsonapi
 django-filter==23.2

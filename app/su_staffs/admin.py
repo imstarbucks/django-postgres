@@ -13,7 +13,7 @@ from .resource import SUStaffResource
 class StaffAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = ['staff_id', 'title', 'name',
                     'status', 'dept_id', 'school_id']
-    list_filter = ['dept_id', 'school_id']
+    list_filter = ['dept_id', 'school_id', 'status']
     search_fields = ['staff_id', 'name']
     resource_class = SUStaffResource
 

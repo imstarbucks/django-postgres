@@ -10,7 +10,7 @@ from .resource import SUStaffResource
 
 
 @admin.register(SU_Staff)
-class StaffAdmin(ExportMixin, admin.ModelAdmin):
+class StaffAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = ['staff_id', 'title', 'name',
                     'status', 'dept_id', 'school_id']
     list_filter = ['dept_id', 'school_id']

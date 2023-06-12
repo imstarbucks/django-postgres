@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'server',
     'import_export',
-    'su_staffs'
+    'su_staffs',
 ]
 
 MIDDLEWARE = [

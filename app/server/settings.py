@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'server',
     'import_export',
     'su_staffs',
+    'rest_framework',
+    'api'
 ]
 
 MIDDLEWARE = [

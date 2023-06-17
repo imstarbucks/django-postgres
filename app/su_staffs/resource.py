@@ -1,16 +1,12 @@
 from import_export import resources, fields
 from import_export.widgets import ForeignKeyWidget
-from .models import SU_Staff, Department, School
+from .models import SU_Staff
 
 
 class SUStaffResource(resources.ModelResource):
     staff_id = fields.Field(attribute='staff_id', column_name='STAFF ID')
     name = fields.Field(attribute='name', column_name='STAFF NAME')
     title = fields.Field(attribute='title', column_name='Title')
-    dept = fields.Field(attribute='dept_id', column_name='DPET',
-                        widget=ForeignKeyWidget(Department))
-    school = fields.Field(attribute='school_id', column_name='SCHOOL',
-                          widget=ForeignKeyWidget(School))
 
     class Meta:
         model = SU_Staff

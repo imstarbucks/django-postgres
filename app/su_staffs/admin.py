@@ -1,6 +1,6 @@
 from django.contrib import admin
 from import_export.admin import ImportExportMixin, ExportMixin
-from .models import SU_Staff, School, Department
+from .models import SU_Staff
 from .resource import SUStaffResource
 
 
@@ -9,15 +9,13 @@ from .resource import SUStaffResource
 #     resource_class = SUStaffResource
 
 
-@admin.register(SU_Staff)
 class StaffAdmin(ImportExportMixin, admin.ModelAdmin):
-    list_display = ['staff_id', 'title', 'name',
-                    'status', 'dept_id', 'school_id']
-    list_filter = ['dept_id', 'school_id', 'status']
-    search_fields = ['staff_id', 'name']
     resource_class = SUStaffResource
+    list_display = ("staff_id", "name", "title",
+                    "status")
 
 
 # admin.site.register(SU_Staff, SUStaffAdmin)
-admin.site.register(School)
-admin.site.register(Department)
+admin.site.register(SU_Staff, StaffAdmin)
+# admin.site.register(School)
+# admin.site.register(Department)

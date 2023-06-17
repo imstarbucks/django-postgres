@@ -2,28 +2,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class School(models.Model):
-    school_id = models.CharField(
-        ("SCHOOL ID"), max_length=20, primary_key=True)
-    school_name = models.CharField(
-        ("SCHOOL NAME"), max_length=255)
-
-    def __str__(self):
-        return self.school_id
-
-
-class Department(models.Model):
-    dept_id = models.CharField(
-        ("DEPARTMENT ID"), max_length=20, primary_key=True)
-    dept_name = models.CharField(
-        ("DEPARTMENT NAME"), max_length=255)
-    school_id = models.ForeignKey(
-        School, on_delete=models.CASCADE, db_column='school_id', default=None)
-
-    def __str__(self):
-        return self.dept_id
-
-
 class SU_Staff(models.Model):
 
     # Select dropdown for Title/Salutation
@@ -44,10 +22,6 @@ class SU_Staff(models.Model):
                              max_length=20, choices=Salutation.choices, default=Salutation.BLANK)
     status = models.BooleanField(
         "STATUS", default=True)
-    dept_id = models.ForeignKey(
-        Department, on_delete=models.CASCADE, db_column='dept_id', default=None, null=True)
-    school_id = models.ForeignKey(
-        School, on_delete=models.CASCADE, db_column='school_id', default=None)
 
     class Meta:
         verbose_name = "SU Staff"

@@ -2,6 +2,36 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+class School(models.Model):
+    school_id = models.CharField(
+        _("SCHOOL ID"), max_length=20, primary_key=True)
+    school_name = models.CharField(
+        _("SCHOOL NAME"), max_length=255)
+
+    def __str__(self):
+        return self.school_id
+
+
+def get_default_school():
+    return School.objects.get_or_create(school_id="NO_SCHOOL")[0]
+
+
+class Department(models.Model):
+    dpet_id = models.CharField(
+        _("DEPARTMENT ID"), max_length=20, primary_key=True)
+    dpet_name = models.CharField(
+        _("DEPARTMENT NAME"), max_length=255)
+    school_id = models.ForeignKey(
+        "School", on_delete=models.CASCADE, db_column='school_id', default=get_default_school)
+
+    def __str__(self):
+        return self.dpet_id
+
+
+def get_default_dept():
+    return Department.objects.get_or_create(dpet_id="NO_DEPT")[0]
+
+
 class SU_Staff(models.Model):
 
     # Select dropdown for Title/Salutation
@@ -16,16 +46,19 @@ class SU_Staff(models.Model):
         MR = "Mr", _("Mr")
         MS = "Ms", _("Ms")
 
-    staff_id = models.CharField(("STAFF ID"), max_length=20, primary_key=True)
-    name = models.CharField(("STAFF NAME"), max_length=256)
-    title = models.CharField(("TITLE"),
+    staff_id = models.CharField(_("STAFF ID"), max_length=20, primary_key=True)
+    name = models.CharField(_("STAFF NAME"), max_length=256)
+    title = models.CharField(_("TITLE"),
                              max_length=20, choices=Salutation.choices, default=Salutation.BLANK)
-    status = models.BooleanField(
-        "STATUS", default=True)
+    status = models.BooleanField(_("STATUS"), default=True)
+    dpet_id = models.ForeignKey(
+        Department, on_delete=models.CASCADE, default=get_default_dept, db_column='dpet_id')
+    # school_id = models.ForeignKey(
+    #     School, on_delete=models.CASCADE, db_column='school_id', default=get_default_school)
 
     class Meta:
         verbose_name = "SU Staff"
         verbose_name_plural = "SU Staffs"
 
     def __str__(self):
-        return (self.name)
+        return self.name

@@ -4,3 +4,4 @@ djangorestframework  # Django REST framework for building APIs
 djangorestframework-jsonapi
 django-filter==23.2
 django-import-export
+nameparser

@@ -53,6 +53,8 @@ class SU_Staff(models.Model):
     status = models.BooleanField(_("STATUS"), default=True)
     dpet_id = models.ForeignKey(
         Department, on_delete=models.CASCADE, default=get_default_dept, db_column='dpet_id')
+    author_name = models.CharField(
+        "AUTHOR NAME", max_length=256, default=None, blank=True, null=True)
     # school_id = models.ForeignKey(
     #     School, on_delete=models.CASCADE, db_column='school_id', default=get_default_school)
 

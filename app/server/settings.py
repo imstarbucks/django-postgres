@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'import_export',
     'su_staffs',
     'rest_framework',
-    'api'
+    'api',
+    'grants'
 ]
 
 MIDDLEWARE = [

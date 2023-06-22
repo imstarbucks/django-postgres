@@ -2,7 +2,7 @@ from rest_framework import viewsets, generics
 from su_staffs.models import SU_Staff
 from api.serializers import SU_StaffSerializer
 from .filters import SU_StaffFilter
-from django_filters.rest_framework import DjangoFilterBackend
+# from django_filters.rest_framework import DjangoFilterBackend
 
 
 class SU_StaffViewSet(viewsets.ModelViewSet):

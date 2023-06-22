@@ -6,10 +6,10 @@ from .resource import SUStaffResource
 
 class StaffAdmin(ImportExportMixin, admin.ModelAdmin):
     resource_class = SUStaffResource
-    list_display = ("staff_id", "name", "title",
+    list_display = ("staff_id", "name", "author_name", "title",
                     "status", "get_dpet_id", "get_school_id")
     list_filter = ['status', 'dpet_id__school_id', 'dpet_id__dpet_id']
-    search_fields = ['staff_id', 'name']
+    search_fields = ['staff_id', 'name', 'author_name']
 
     def get_dpet_id(self, obj):
         return obj.dpet_id.dpet_id

@@ -1,8 +1,55 @@
 from import_export import resources, fields
-from import_export.widgets import ForeignKeyWidget
+from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 from .models import Grant, Sponsor
 from su_staffs.models import SU_Staff
 from django.core.exceptions import ObjectDoesNotExist
+
+
+class CustomManyToManyWidget(ManyToManyWidget):
+    def clean(self, value, row=None, *args, **kwargs):
+        if not value:
+            return self.model.objects.none()
+
+        # Split the value by semicolon (;) to separate individual records
+        records = value.split(";")
+
+        # Initialize an empty list to store the staff names
+        staff_names = []
+
+        # Iterate over each record
+        for record in records:
+            try:
+                # Split the record by comma (,) to separate name, institution, and country
+                name, institution, country = [
+                    x.strip() for x in record.split(",")]
+
+                # Check if the institution is "Sunway University"
+                if institution.lower() == "sunway university":
+                    # Append the staff name to the list
+                    staff_names.append(name.upper())
+            except ValueError:
+                # Skip empty records or records with incorrect format
+                pass
+
+        # Query the model to retrieve the Sunway University staff based on the filtered staff names
+        sunway_staff = self.model.objects.filter(name__in=staff_names)
+
+        return sunway_staff
+
+
+class CapitalizedForeignKeyWidget(ForeignKeyWidget):
+    default_value = None  # Set your desired default value here
+
+    def clean(self, value, row=None, *args, **kwargs):
+        # Convert the value to capital letters
+        value = value.upper()
+
+        # Query the SU_Staff table based on the name column (case-insensitive)
+        try:
+            staff = SU_Staff.objects.filter(name__iexact=value).first()
+            return staff
+        except SU_Staff.DoesNotExist:
+            return self.default_value
 
 
 class GrantResource(resources.ModelResource):
@@ -30,7 +77,7 @@ class GrantResource(resources.ModelResource):
     )
 
     su_staff = fields.Field(
-        column_name='SU STAFF', attribute='su_staff', widget=ForeignKeyWidget(SU_Staff, 'name')
+        column_name='SU STAFF', attribute='su_staff', widget=CapitalizedForeignKeyWidget(SU_Staff, 'name')
     )
     # su_staff = fields.Field(
     #     column_name='SU STAFF', attribute='name'
@@ -48,37 +95,14 @@ class GrantResource(resources.ModelResource):
         column_name='AMOUNT AWARDED (RM)', attribute='amount_awarded'
     )
 
+    collaborators = fields.Field(
+        column_name='COLLABORATORS',
+        attribute='collaborators',
+        widget=CustomManyToManyWidget(SU_Staff, field='name')
+    )
+
     def get_sponsor_category(self, instance):
         return instance.sponsor.sponsor_category
-
-    def before_save_instance(self, instance, using_transactions, dry_run):
-        # Retrieve the staff_name value from the instance
-        staff_name = instance.name
-
-        try:
-            # Attempt to find the matching SU_Staff object
-            su_staff = SU_Staff.objects.get(name=staff_name)
-
-        # Convert staff_name to capital format
-            upper_staff_name = self.convert_to_all_capital(staff_name)
-
-        # Assign the upper_staff_name to the name field of the SU_Staff instance
-            su_staff.name = upper_staff_name
-
-        # Save the modified SU_Staff instance
-            su_staff.save()
-
-        except ObjectDoesNotExist:
-            # Handle the case when no matching SU_Staff object is found
-            print(f"No SU_Staff object found with name: {staff_name}")
-
-    @staticmethod
-    def convert_to_all_capital(staff_name):
-        try:
-            upper_name = staff_name.upper()
-            return upper_name
-        except Exception as e:
-            return (f"Conversion Error: {str(e)}")
 
     class Meta:
         model = Grant

@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'su_staffs',
     'rest_framework',
     'api',
-    'grants'
+    'grants',
+    "rangefilter",
 ]
 
 MIDDLEWARE = [

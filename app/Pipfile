@@ -12,6 +12,8 @@ djangorestframework-jsonapi = "*"
 django-filter = "==23.2"
 setuptools = "*"
 nameparser = "*"
+django-daterange-filterspec = "*"
+django-admin-rangefilter = "*"
 
 [dev-packages]
 

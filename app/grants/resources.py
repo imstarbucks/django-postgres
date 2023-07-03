@@ -13,10 +13,8 @@ class CustomManyToManyWidget(ManyToManyWidget):
         # Split the value by semicolon (;) to separate individual records
         records = value.split(";")
 
-        # Initialize an empty list to store the staff names
         staff_names = []
 
-        # Iterate over each record
         for record in records:
             try:
                 # Split the record by comma (,) to separate name, institution, and country
@@ -61,7 +59,7 @@ class GrantResource(resources.ModelResource):
 
     sponsor_category = fields.Field(
         column_name='SPONSOR CATEGORY (UNIVERSITY, NATIONAL, PRIVATE, INTERNATIONAL)',
-        attribute='get_sponsor_category'
+        attribute='sponsor__sponsor_category'
     )
 
     grant_name = fields.Field(
@@ -82,6 +80,9 @@ class GrantResource(resources.ModelResource):
     # su_staff = fields.Field(
     #     column_name='SU STAFF', attribute='name'
     # )
+
+    school_id = fields.Field(
+        column_name='SCHOOL NAME', attribute='su_staff__dpet_id__school_id')
 
     project_start_date = fields.Field(
         column_name='Project Start Date', attribute='project_start_date'

@@ -63,4 +63,4 @@ class SU_Staff(models.Model):
         verbose_name_plural = "SU Staffs"
 
     def __str__(self):
-        return self.name
+        return f"{self.staff_id}: {self.name}"

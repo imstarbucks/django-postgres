@@ -6,7 +6,7 @@ from rangefilter.filters import DateRangeFilterBuilder
 
 
 class GrantAdmin(ImportExportMixin, admin.ModelAdmin):
-    filter_horizontal = ('su_staff',)
+    filter_horizontal = ('collaborators',)
     list_display = ("project_code", "project_title", "grant_name", "sponsor", "su_staff"
                     )
     resource_class = GrantResource
@@ -14,6 +14,7 @@ class GrantAdmin(ImportExportMixin, admin.ModelAdmin):
                    ('project_end_date', DateRangeFilterBuilder())]
     search_fields = ['project_code', 'project_title',
                      'su_staff__name']
+    search_help_text = "Searchable: Project Code, Project Title, SU Staff name"
 
     def get_school_id(self, obj):
         return obj.su_staff.dept_id.dept_id

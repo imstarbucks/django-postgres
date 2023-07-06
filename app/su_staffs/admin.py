@@ -10,6 +10,7 @@ class StaffAdmin(ImportExportMixin, admin.ModelAdmin):
                     "status", "get_dpet_id", "get_school_id")
     list_filter = ['status', 'dpet_id__school_id', 'dpet_id__dpet_id']
     search_fields = ['staff_id', 'name', 'author_name']
+    search_help_text = "Searchable: SU Staff ID, SU Staff Name, SU Staff author name format"
 
     def get_dpet_id(self, obj):
         return obj.dpet_id.dpet_id

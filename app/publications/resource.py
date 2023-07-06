@@ -1,9 +1,8 @@
-import random
-import string
+import re
 from import_export import resources, widgets
-from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
+from import_export.widgets import ForeignKeyWidget, ManyToManyWidget, IntegerWidget
 from import_export import fields
-from .models import ScopusPublication, Publisher
+from .models import ScopusPublication, WOSPublication, Publisher
 from su_staffs.models import SU_Staff
 
 class CustomManyToManyAuthorsWidget(ManyToManyWidget):
@@ -29,6 +28,22 @@ class CustomManyToManyAuthorsWidget(ManyToManyWidget):
 
 		return staff_ids
 
+class CustomManyToManyAffliationWidget(ManyToManyWidget):
+    def clean(self, value, row=None, **kwargs):
+        if not value:
+            return self.model.objects.none()
+
+        records = re.findall(r'\[(.*?)\]', value)[0]
+        if not records:
+            return self.model.objects.none()
+
+        name_list = [record.upper().strip().replace(',', '') for record in records.split(';')]
+
+        staff = self.model.objects.filter(name__in=name_list)
+        staff_ids = staff.values_list('staff_id', flat=True)
+
+        return staff_ids
+
 # Auto create Publisher instance if the publisher_name does not exist in the Publisher model
 class CustomPublisherWidget(ForeignKeyWidget):
     def clean(self, value, row=None, *args, **kwargs):
@@ -50,8 +65,36 @@ class CustomPublisherWidget(ForeignKeyWidget):
 
         return publisher
 
+class WOSPublicationResource(resources.ModelResource):
+    wos_id = fields.Field(column_name='UT (Unique WOS ID)', attribute='wos_id')
+    doi = fields.Field(column_name='DOI', attribute='doi')
+    publisher_name = fields.Field(column_name='Publisher', attribute='publisher_name',
+                                  widget=CustomPublisherWidget(Publisher, field='publisher_name'))
+    doc_types = fields.Field(column_name='Document Type', attribute='doc_types')
+    title = fields.Field(column_name='Article Title', attribute='title')
+    source_title = fields.Field(column_name='Source Title', attribute='source_title')
+    authors = fields.Field(column_name='Authors', attribute='authors')
+    published_year = fields.Field(column_name='Publication Year', attribute='published_year', widget=IntegerWidget(True))
+    volume = fields.Field(column_name='Volume', attribute='volume')
+    issue = fields.Field(column_name='Issue', attribute='issue')
+    page_start = fields.Field(column_name='Start Page', attribute='page_start')
+    page_end = fields.Field(column_name='End Page', attribute='page_end')
+    eissn = fields.Field(column_name='eISSN', attribute='eissn')
+    issn = fields.Field(column_name='ISSN', attribute='issn')
+    isbn = fields.Field(column_name='ISBN', attribute='isbn')
+    link = fields.Field(column_name='DOI Link', attribute='link')
+    editors = fields.Field(column_name='Book Editors', attribute='editors')
+    su_staff = fields.Field(column_name='Addresses', attribute = 'su_staff', widget=CustomManyToManyAffliationWidget(SU_Staff, field='author_name'))
 
-class PublicationResource(resources.ModelResource):
+
+    class Meta:
+        model = WOSPublication
+        fields = ('wos_id', 'doi', 'publisher_name', 'doc_types')
+        exclude = ("id")
+        import_id_fields = ["wos_id",]
+
+
+class ScopusPublicationResource(resources.ModelResource):
     eid = fields.Field(column_name='EID', attribute='eid')
     doi = fields.Field(column_name='DOI', attribute='doi')
     publisher_name = fields.Field(column_name='Publisher', attribute='publisher_name',
@@ -93,4 +136,3 @@ class PublicationResource(resources.ModelResource):
         fields = ('eid', 'doi', 'publisher_name', 'doc_types')
         exclude = ("id")
         import_id_fields = ["eid",]
-        # Other fields configuration

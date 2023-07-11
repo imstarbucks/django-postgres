@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from users.models import User
 
 class School(models.Model):
     school_id = models.CharField(
@@ -55,6 +56,7 @@ class SU_Staff(models.Model):
         Department, on_delete=models.CASCADE, default=get_default_dept, db_column='dpet_id')
     author_name = models.CharField(
         "AUTHOR NAME", max_length=256, default=None, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     # school_id = models.ForeignKey(
     #     School, on_delete=models.CASCADE, db_column='school_id', default=get_default_school)
 

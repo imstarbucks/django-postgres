@@ -33,6 +33,8 @@ DEBUG = int(os.environ.get("DEBUG", default=0))
 ALLOWED_HOSTS = ["*"]
 
 
+AUTH_USER_MODEL = 'users.User'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
     'grants',
     "rangefilter",
     "publications",
+	'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [

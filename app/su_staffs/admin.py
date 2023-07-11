@@ -2,7 +2,11 @@ from django.contrib import admin
 from import_export.admin import ImportExportMixin, ExportMixin
 from .models import SU_Staff, Department, School
 from .resource import SUStaffResource
+from publications.models import Publication
 
+class PublicationInline(admin.TabularInline):
+    model = Publication.su_staff.through
+    # autocomplete_fields = ['publications']
 
 class StaffAdmin(ImportExportMixin, admin.ModelAdmin):
     resource_class = SUStaffResource
@@ -11,6 +15,8 @@ class StaffAdmin(ImportExportMixin, admin.ModelAdmin):
     list_filter = ['status', 'dpet_id__school_id', 'dpet_id__dpet_id']
     search_fields = ['staff_id', 'name', 'author_name']
     search_help_text = "Searchable: SU Staff ID, SU Staff Name, SU Staff author name format"
+    inlines = [PublicationInline]
+    autocomplete_fields = ["publications", "user"]
 
     def get_dpet_id(self, obj):
         return obj.dpet_id.dpet_id

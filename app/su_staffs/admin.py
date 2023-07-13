@@ -16,7 +16,13 @@ class StaffAdmin(ImportExportMixin, admin.ModelAdmin):
     search_fields = ['staff_id', 'name', 'author_name']
     search_help_text = "Searchable: SU Staff ID, SU Staff Name, SU Staff author name format"
     inlines = [PublicationInline]
-    autocomplete_fields = ["publications", "user"]
+    autocomplete_fields = ["publications"]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(user=request.user)
 
     def get_dpet_id(self, obj):
         return obj.dpet_id.dpet_id

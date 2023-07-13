@@ -4,7 +4,11 @@ from django.db import models
 
 class User(AbstractUser):
     phone = models.CharField(max_length=32, blank=True, null=True)
-    # staff_id = models.OneToOneField('su_staffs.staff_id', on_delete=models.CASCADE, null=True, blank=True)
+    biography = models.CharField(max_length=256, blank=True, null=True, default=None)
+    scopus_link = models.URLField(blank=True, null=True, default=None)
+    linkedin_link = models.URLField(blank=True, null=True, default=None)
+    profile_image=models.ImageField(upload_to='profile_image', null=True, blank=True, default=None)
+    cv=models.FileField(upload_to='cv', null=True, blank=True, default=None)
 
     class Meta:
         db_table = 'auth_user'

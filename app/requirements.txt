@@ -6,3 +6,5 @@ django-filter==23.2
 django-import-export
 nameparser
 django-admin-rangefilter
+django-nested-inline
+Pillow

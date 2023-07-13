@@ -57,8 +57,6 @@ class SU_Staff(models.Model):
     author_name = models.CharField(
         "AUTHOR NAME", max_length=256, default=None, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    # school_id = models.ForeignKey(
-    #     School, on_delete=models.CASCADE, db_column='school_id', default=get_default_school)
 
     class Meta:
         verbose_name = "SU Staff"

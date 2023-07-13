@@ -154,7 +154,7 @@ class WOSPublication(models.Model):
 
 class Publication(models.Model):
     class PublicationSourceChoices(models.TextChoices):
-        BLANK = "", _("")
+        BLANK = "-", _("-")
         SCOPUS = "SCOPUS", _("SCOPUS")
         WOS = "WOS", _("WOS")
         SCOPUSWOS = "SCOPUS & WOS", _("SCOPUS & WOS")

@@ -40,6 +40,6 @@ class Grant(models.Model):
     project_end_date = models.DateField(
         "PROJECT END DATE", max_length=256, blank=True, null=True)
     collaborators = models.ManyToManyField(
-        SU_Staff, blank=True, null=True, related_name="su_staff")
+        SU_Staff, blank=True, null=True, related_name="grant_su_staff")
     amount_awarded = models.DecimalField(
         "AMOUNT AWARDED (RM)", max_digits=10, decimal_places=2, null=True, blank=True)

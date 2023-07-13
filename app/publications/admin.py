@@ -6,89 +6,7 @@ from .models import Publisher, Publication, ScopusPublication, WOSPublication
 from .resource import ScopusPublicationResource, WOSPublicationResource
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
-# class PublicationInline(admin.TabularInline):
-#     model = Publication
-#     max_num = 1
-#     autocomplete_fields = ["scopus_publication", "wos_publication"]
-# class WOSPublicationAdmin(ImportExportMixin, admin.ModelAdmin):
-#     filter_horizontal = ('su_staff',)
-#     resource_class = WOSPublicationResource
-#     list_display = ('wos_id', 'doi', 'authors', 'published_year', 'get_su_staff')
-#     list_filter = ['doc_types', 'published_year', 'source_title']
-#     search_fields=['su_staff__name', 'su_staff__staff_id', 'wos_id', 'doi']
-#     search_help_text = "Searchable: SU Staff name, SU Staff ID, eid, doi"
-#     readonly_fields = ["source"]
-#     inlines = [PublicationInline]
 
-#     def get_su_staff(self, obj):
-#         return ', '.join([str(staff) for staff in obj.su_staff.all()])
-
-    # def save_model(self, request, obj, form, change):
-    #     super().save_model(request, obj, form, change)
-    #     if obj.doi and obj.doi.strip():
-    #         try:
-    #             scopus_publication = Publication.objects.get(scopus_publication__doi=obj.doi)
-    #             set_publication_source = Publication.PublicationSourceChoices.SCOPUSWOS
-    #             scopus_publication.wos_publication = obj
-    #             scopus_publication.publication_source = set_publication_source
-    #             scopus_publication.save()
-
-    #         except Publication.DoesNotExist:
-    #             set_publication_source = Publication.PublicationSourceChoices.WOS
-    #             Publication.objects.create(
-    #                 wos_publication=obj,
-    #                 publication_source=set_publication_source
-    #             )
-    #     else :
-    #         set_publication_source = Publication.PublicationSourceChoices.WOS
-    #         Publication.objects.create(
-    #             wos_publication=obj,
-    #             publication_source=set_publication_source
-    #         )
-
-    # get_su_staff.short_description = 'SU Staff'
-
-
-
-# class ScopuesPublicationAdmin(ImportExportMixin, admin.ModelAdmin):
-#     filter_horizontal = ('su_staff',)
-#     resource_class = ScopusPublicationResource
-#     list_display = ('eid', 'doi', 'authors', 'published_year', 'get_su_staff')
-#     list_filter = ['doc_types', 'published_year', 'source_title']
-#     search_fields=['su_staff__name', 'su_staff__staff_id', 'eid', 'doi']
-#     search_help_text = "Searchable: SU Staff name, SU Staff ID, eid, doi"
-#     readonly_fields = ["source"]
-#     inlines = [PublicationInline]
-
-#     def get_su_staff(self, obj):
-#         return ', '.join([str(staff) for staff in obj.su_staff.all()])
-
-    # def save_model(self, request, obj, form, change):
-    #     super().save_model(request, obj, form, change)
-    #     if obj.doi and obj.doi.strip():
-    #         try:
-    #             wos_publication = Publication.objects.get(wos_publication__doi=obj.doi)
-    #             set_publication_source = Publication.PublicationSourceChoices.SCOPUSWOS
-    #             wos_publication.scopus_publication = obj
-    #             wos_publication.publication_source = set_publication_source
-    #             wos_publication.save()
-
-    #         except Publication.DoesNotExist:
-    #             set_publication_source = Publication.PublicationSourceChoices.SCOPUS
-
-    #             Publication.objects.create(
-    #                 scopus_publication=obj,
-    #                 publication_source=set_publication_source
-    #             )
-
-    #     else :
-    #         set_publication_source = Publication.PublicationSourceChoices.SCOPUS
-    #         Publication.objects.create(
-    #             scopus_publication=obj,
-    #             publication_source=set_publication_source
-    #         )
-
-    # get_su_staff.short_description = 'SU Staff'
 class SchoolFilter(admin.SimpleListFilter):
     title = 'School'
     parameter_name = 'school_id'
@@ -124,6 +42,33 @@ class PublicationAdmin(ImportExportMixin,admin.ModelAdmin):
     resource_classes = [ScopusPublicationResource, WOSPublicationResource]
     readonly_fields = ["publication_source"]
     ordering = ["published_year"]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(su_staff=request.user.username)
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+
+        if(obj.scopus_publication and obj.wos_publication):
+            obj.publication_source = Publication.PublicationSourceChoices.SCOPUSWOS
+            obj.save()
+            return
+        if(obj.scopus_publication):
+            obj.publication_source = Publication.PublicationSourceChoices.SCOPUS
+            obj.save()
+            return
+        if(obj.wos_publication):
+            obj.publication_source = Publication.PublicationSourceChoices.WOS
+            obj.save()
+            return
+        else :
+            set_publication_source = Publication.PublicationSourceChoices.BLANK
+            Publication.objects.create(
+                publication_source=set_publication_source
+            )
 
 admin.site.register(Publisher)
 admin.site.register(ScopusPublication, ScopusAdmin)

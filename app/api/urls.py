@@ -1,10 +1,12 @@
 from django.urls import include, path
 from rest_framework import routers
-from api.views import SU_StaffViewSet
+from .views import SU_StaffViewSet, PublicationViewSet
+
 
 router = routers.DefaultRouter()
-router.register(r'su_staffs', SU_StaffViewSet)
+router.register(r"su_staffs", SU_StaffViewSet)
+router.register(r"publications", PublicationViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]

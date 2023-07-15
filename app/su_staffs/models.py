@@ -1,13 +1,13 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from users.models import User
+# from users.models import User
+from django.contrib.auth import get_user_model
+
 
 class School(models.Model):
-    school_id = models.CharField(
-        _("SCHOOL ID"), max_length=20, primary_key=True)
-    school_name = models.CharField(
-        _("SCHOOL NAME"), max_length=255)
+    school_id = models.CharField(_("SCHOOL ID"), max_length=20, primary_key=True)
+    school_name = models.CharField(_("SCHOOL NAME"), max_length=255)
 
     def __str__(self):
         return self.school_id
@@ -18,12 +18,14 @@ def get_default_school():
 
 
 class Department(models.Model):
-    dpet_id = models.CharField(
-        _("DEPARTMENT ID"), max_length=20, primary_key=True)
-    dpet_name = models.CharField(
-        _("DEPARTMENT NAME"), max_length=255)
+    dpet_id = models.CharField(_("DEPARTMENT ID"), max_length=20, primary_key=True)
+    dpet_name = models.CharField(_("DEPARTMENT NAME"), max_length=255)
     school_id = models.ForeignKey(
-        "School", on_delete=models.CASCADE, db_column='school_id', default=get_default_school)
+        "School",
+        on_delete=models.CASCADE,
+        db_column="school_id",
+        default=get_default_school,
+    )
 
     def __str__(self):
         return self.dpet_id
@@ -34,8 +36,9 @@ def get_default_dept():
 
 
 class SU_Staff(models.Model):
-
     # Select dropdown for Title/Salutation
+    CustomUser = get_user_model()
+
     class Salutation(models.TextChoices):
         BLANK = "", _("")
         PROF = "Prof.", _("Prof.")
@@ -49,14 +52,26 @@ class SU_Staff(models.Model):
 
     staff_id = models.CharField(_("STAFF ID"), max_length=20, primary_key=True)
     name = models.CharField(_("STAFF NAME"), max_length=256)
-    title = models.CharField(_("TITLE"),
-                             max_length=20, choices=Salutation.choices, default=Salutation.BLANK)
+    title = models.CharField(
+        _("TITLE"), max_length=20, choices=Salutation.choices, default=Salutation.BLANK
+    )
     status = models.BooleanField(_("STATUS"), default=True)
     dpet_id = models.ForeignKey(
-        Department, on_delete=models.CASCADE, default=get_default_dept, db_column='dpet_id')
+        Department,
+        on_delete=models.CASCADE,
+        default=get_default_dept,
+        db_column="dpet_id",
+    )
     author_name = models.CharField(
-        "AUTHOR NAME", max_length=256, default=None, blank=True, null=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+        "AUTHOR NAME", max_length=256, default=None, blank=True, null=True
+    )
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        db_column="username",
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         verbose_name = "SU Staff"

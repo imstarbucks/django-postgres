@@ -7,11 +7,13 @@ class User(AbstractUser):
     biography = models.CharField(max_length=256, blank=True, null=True, default=None)
     scopus_link = models.URLField(blank=True, null=True, default=None)
     linkedin_link = models.URLField(blank=True, null=True, default=None)
-    profile_image=models.ImageField(upload_to='profile_image', null=True, blank=True, default=None)
-    cv=models.FileField(upload_to='cv', null=True, blank=True, default=None)
+    profile_image = models.ImageField(
+        upload_to="profile_image", null=True, blank=True, default=None
+    )
+    cv = models.FileField(upload_to="cv", null=True, blank=True, default=None)
 
     class Meta:
-        db_table = 'auth_user'
+        db_table = "auth_user"
 
     def __str__(self):
-            return self.username
+        return f"{self.username}"

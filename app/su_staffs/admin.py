@@ -4,19 +4,30 @@ from .models import SU_Staff, Department, School
 from .resource import SUStaffResource
 from publications.models import Publication
 
+
 class PublicationInline(admin.TabularInline):
     model = Publication.su_staff.through
     # autocomplete_fields = ['publications']
 
+
 class StaffAdmin(ImportExportMixin, admin.ModelAdmin):
     resource_class = SUStaffResource
-    list_display = ("staff_id", "name", "author_name", "title",
-                    "status", "get_dpet_id", "get_school_id")
-    list_filter = ['status', 'dpet_id__school_id', 'dpet_id__dpet_id']
-    search_fields = ['staff_id', 'name', 'author_name']
-    search_help_text = "Searchable: SU Staff ID, SU Staff Name, SU Staff author name format"
+    list_display = (
+        "staff_id",
+        "name",
+        "author_name",
+        "title",
+        "status",
+        "get_dpet_id",
+        "get_school_id",
+    )
+    list_filter = ["status", "dpet_id__school_id", "dpet_id__dpet_id"]
+    search_fields = ["staff_id", "name", "author_name"]
+    search_help_text = (
+        "Searchable: SU Staff ID, SU Staff Name, SU Staff author name format"
+    )
     inlines = [PublicationInline]
-    autocomplete_fields = ["publications"]
+    autocomplete_fields = ["publications", "user"]
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)

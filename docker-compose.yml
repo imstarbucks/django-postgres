@@ -22,7 +22,6 @@ services:
       - POSTGRES_PASSWORD=${SQL_PASSWORD}
       - POSTGRES_DB=${SQL_DATABASE}
       - PGDATA=/var/lib/postgresql/data/
-      - POSTGRES_EXTENSIONS= pg_trgm
 
   pgadmin:
     container_name: "pgadmin4-container"

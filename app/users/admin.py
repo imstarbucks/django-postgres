@@ -11,7 +11,7 @@ TokenAdmin.raw_id_fields = ["user"]
 class SUStaffInline(admin.StackedInline):
     model = SU_Staff
     can_delete = False
-    exclude = ("staff_id",)
+    # exclude = ("staff_id",)
     verbose_name_plural = "SU Staffs"
 
 
@@ -22,6 +22,8 @@ class UserAdmin(BaseUserAdmin):
         "date_joined",
         "last_login",
     ]
+    inlines = [SUStaffInline]
+
     fieldsets = (
         (None, {"fields": ("username", "password")}),
         (
@@ -30,6 +32,7 @@ class UserAdmin(BaseUserAdmin):
                 "fields": (
                     "email",
                     "phone",
+                    "biography",
                     "linkedin_link",
                     "scopus_link",
                     "profile_image",
@@ -111,7 +114,6 @@ class UserAdmin(BaseUserAdmin):
 
         return form
 
-    # inlines = [SUStaffInline]
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.user.is_superuser:

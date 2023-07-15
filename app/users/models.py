@@ -4,7 +4,7 @@ from django.db import models
 
 class User(AbstractUser):
     phone = models.CharField(max_length=32, blank=True, null=True)
-    biography = models.CharField(max_length=256, blank=True, null=True, default=None)
+    biography = models.TextField(blank=True, null=True, default=None)
     scopus_link = models.URLField(blank=True, null=True, default=None)
     linkedin_link = models.URLField(blank=True, null=True, default=None)
     profile_image = models.ImageField(

@@ -1,6 +1,11 @@
 from rest_framework import serializers
 from su_staffs.models import SU_Staff, Department, School
-from publications.models import Publication, Publisher
+from publications.models import (
+    Publication,
+    Publisher,
+    WOSPublication,
+    ScopusPublication,
+)
 from grants.models import Grant
 from django.contrib.auth import get_user_model
 
@@ -33,6 +38,21 @@ class SchoolSerializer(serializers.ModelSerializer):
         fields = ("school_id", "school_name")
 
 
+class PureSU_StaffSerializer(serializers.ModelSerializer):
+    school_id = serializers.SerializerMethodField()
+
+    def get_school_id(self, obj):
+        return (
+            obj.dpet_id.school_id.school_id
+            if obj.dpet_id and obj.dpet_id.school_id
+            else None
+        )
+
+    class Meta:
+        model = SU_Staff
+        fields = ("staff_id", "name", "school_id")
+
+
 class SU_StaffSerializer(serializers.ModelSerializer):
     school_id = serializers.SerializerMethodField()
     user = UserSerializer(read_only=True)
@@ -49,9 +69,23 @@ class SU_StaffSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class WOSSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WOSPublication
+        fields = "__all__"
+
+
+class ScopusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ScopusPublication
+        fields = "__all__"
+
+
 class PublicationSerializer(serializers.ModelSerializer):
-    su_staff = SU_StaffSerializer(many=True, read_only=True)
+    su_staff = PureSU_StaffSerializer(many=True, read_only=True)
     publisher_name = PublisherSerializer(read_only=True)
+    wos_publication = WOSSerializer(read_only=True)
+    scopus_publication = ScopusSerializer(read_only=True)
 
     class Meta:
         model = Publication

@@ -13,7 +13,12 @@ import {
 import { Pie, Bar } from "react-chartjs-2";
 import * as Tabs from "@radix-ui/react-tabs";
 
-import { Staff, Publisher, PublicationLink } from "@/interfaces/common";
+import {
+    Staff,
+    Publisher,
+    PublicationLink,
+    Publication,
+} from "@/interfaces/common";
 import SectionHeader from "@/components/SectionHeader";
 
 interface PublicationSourceYear {
@@ -21,31 +26,6 @@ interface PublicationSourceYear {
     scopus: number | null;
     wos: number | null;
     total: number;
-}
-
-interface Publication {
-    id: number;
-    su_staff: Staff[];
-    publisher_name: Publisher | null;
-    wos_publication: PublicationLink | null;
-    scopus_publication: PublicationLink | null;
-    publication_source: string;
-    doi: string | null;
-    doc_types: string;
-    title: string;
-    source_title: string;
-    authors: string;
-    published_year: string | null;
-    volume: string;
-    issue: string;
-    page_start: string;
-    page_end: string;
-    industry: boolean;
-    international: boolean;
-    national: boolean;
-    editors: string;
-    issn: string | null;
-    isbn: string | null;
 }
 
 export default function SectionCharts() {

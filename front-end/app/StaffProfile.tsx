@@ -55,7 +55,10 @@ export default function StaffProfile() {
 
     return (
         <section className="container mx-auto my-12 lg:max-w-5xl">
-            <SectionHeader title={"Staff Profile"}></SectionHeader>
+            <SectionHeader
+                title={"Staff Profile"}
+                viewMore={"/staff-profile"}
+            ></SectionHeader>
             <Swiper
                 className="relative"
                 ref={swiperRef}

@@ -6,7 +6,7 @@ import SectionHeader from "@/components/SectionHeader";
 const Table = ({ title, tableTitle, data, type }) => {
     return (
         <>
-            <SectionHeader title={title}></SectionHeader>
+            <SectionHeader title={title} viewMore={`/${type}`}></SectionHeader>
             <table className="p-3 w-full">
                 <thead>
                     <tr>

@@ -76,7 +76,12 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+	"corsheaders.middleware.CorsMiddleware"
     # "api.middleware.TransactionStatusMiddleware",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # Add the origin of your frontend application
 ]
 
 ROOT_URLCONF = "server.urls"

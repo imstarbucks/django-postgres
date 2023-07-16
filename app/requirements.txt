@@ -8,3 +8,4 @@ nameparser
 django-admin-rangefilter
 django-nested-inline
 Pillow
+django-cors-headers

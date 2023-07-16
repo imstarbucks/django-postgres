@@ -5,6 +5,7 @@ from .views import (
     PublicationViewSet,
     GrantViewSet,
     SourceTitleCountAPIView,
+	PublicationSourceAPIView
 )
 
 
@@ -19,5 +20,10 @@ urlpatterns = [
         "source-title-count/",
         SourceTitleCountAPIView.as_view(),
         name="source-title-count",
+    ),
+    path(
+        "publication-source/",
+        PublicationSourceAPIView.as_view(),
+        name="publication-source",
     ),
 ]

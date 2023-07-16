@@ -104,3 +104,10 @@ class GrantSerializer(serializers.ModelSerializer):
 class SourceTitleCountSerializer(serializers.Serializer):
     source_title = serializers.CharField()
     count = serializers.IntegerField()
+
+class PublicationSourceSerializer(serializers.ModelSerializer):
+    publication_source = serializers.ChoiceField(choices=Publication.PublicationSourceChoices.choices)
+
+    class Meta:
+        model = Publication
+        fields = ['publication_source']

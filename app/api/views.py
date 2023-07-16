@@ -12,9 +12,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
-
 # from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Count
+from django.db.models import Count, Q
 
 
 class SU_StaffViewSet(viewsets.ModelViewSet):
@@ -78,3 +77,31 @@ class SourceTitleCountAPIView(generics.ListAPIView):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+class PublicationSourceAPIView(generics.ListAPIView):
+    queryset = Publication.objects.all()
+    serializer_class = PublicationSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Count occurrences of each publication source
+        source_counts = (
+            queryset.filter(
+                Q(publication_source='SCOPUS') | Q(publication_source='WOS') | Q(publication_source='SCOPUSWOS')
+            )
+            .values('publication_source')
+            .annotate(count=Count('publication_source'))
+        )
+
+        # Format the response data
+        response_data = []
+        for count in source_counts:
+            source = count['publication_source']
+            if source == 'SCOPUSWOS':
+                response_data.append({'source': 'SCOPUS', 'count': count['count']})
+                response_data.append({'source': 'WOS', 'count': count['count']})
+            else:
+                response_data.append({'source': source, 'count': count['count']})
+
+        return Response(response_data)

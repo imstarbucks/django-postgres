@@ -21,6 +21,7 @@ class SU_StaffFilter(django_filters.FilterSet):
 class PublicationFilter(django_filters.FilterSet):
     latest_publication = django_filters.NumberFilter(method="filter_latest_publication")
     published_year = django_filters.DateFromToRangeFilter(field_name="published_year")
+    title = django_filters.CharFilter(field_name="title", lookup_expr="icontains")
 
     def filter_latest_publication(self, queryset, name, value):
         # Check if the 'latest_publication' query parameter is provided

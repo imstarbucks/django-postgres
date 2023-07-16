@@ -22,7 +22,7 @@ const Table = ({ title, tableTitle, data, type }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {type === "publication"
+                    {type === "publications"
                         ? data &&
                           data.map((d) => (
                               <tr key={`latest-pub-${d.id}`}>

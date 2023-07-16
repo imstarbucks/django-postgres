@@ -86,8 +86,8 @@ const Table = ({ title, tableTitle, data, type }) => {
                                       ))}
                                   </td>
                                   <td className="text-start p-3 bg-custom-blue/30 text-custom-blue text-sm">
-                                      {d.project_end_date
-                                          ? d.project_end_date
+                                      {d.project_start_date
+                                          ? d.project_start_date
                                           : "-"}
                                   </td>
                               </tr>

@@ -1,32 +1,36 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import useFetch from "@/hooks/useFetch";
 
-import { Publication } from "@/interfaces/common";
+import { Grant } from "@/interfaces/common";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import SectionHeader from "@/components/SectionHeader";
 
 export default function Page() {
-    const [publications, setPublications] = useState([]);
+    const [grant, setGrant] = useState<Grant[]>([]);
     const [searchValue, setSearchValue] = useState("");
     const [searchValueEncoded, setSearchValueEncoded] = useState("");
-    const [ogData, setOgData] = useState([]);
+    const [ogData, setOgData] = useState<Grant[]>([]);
+
+    const encodeProjectCode = (project_code: string) => {
+        return encodeURIComponent(project_code);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await useFetch("publications");
+            const data = await useFetch("grants");
             // console.log(data);
-            setPublications(data);
+            setGrant(data);
             setOgData(data);
         };
         fetchData().catch(console.error);
     }, []);
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value === "") {
-            setPublications(ogData);
+            setGrant(ogData);
         }
 
         const encodedValue = encodeURIComponent(e.target.value);
@@ -34,17 +38,17 @@ export default function Page() {
         setSearchValue(e.target.value);
     };
 
-    const onEnterKey = (e) => {
+    const onEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             const fetchData = async () => {
                 const data = await useFetch(
-                    "publications",
-                    `?title=${searchValueEncoded}`
+                    "grants",
+                    `?project_title=${searchValueEncoded}`
                 );
                 // console.log(data);
                 console.log(searchValueEncoded);
                 console.log(data);
-                setPublications(data);
+                setGrant(data);
             };
             fetchData().catch(console.error);
         }
@@ -53,25 +57,25 @@ export default function Page() {
     const onClickSearch = () => {
         const fetchData = async () => {
             const data = await useFetch(
-                "publications",
-                `?title=${searchValueEncoded}`
+                "grants",
+                `?project_title=${searchValueEncoded}`
             );
             // console.log(data);
             console.log(searchValueEncoded);
             console.log(data);
-            setPublications(data);
+            setGrant(data);
         };
         fetchData().catch(console.error);
     };
 
     return (
-        <>
+        <main>
             <div className="container mx-auto my-12 min-h-screen">
-                <SectionHeader title={"Publications"}></SectionHeader>
+                <SectionHeader title={"Grants"} viewMore={""}></SectionHeader>
                 <div className="flex gap-3 items-center mb-5">
                     <input
                         type="text"
-                        placeholder="Search Publication Title"
+                        placeholder="Search Grant Project Title"
                         value={searchValue}
                         onChange={handleInputChange}
                         onKeyDown={onEnterKey}
@@ -89,41 +93,46 @@ export default function Page() {
                     <thead>
                         <tr>
                             <th className="text-start p-3 bg-custom-blue text-white border-r border-r-white last:border-r-0 text-sm">
-                                School
+                                Sponsor
                             </th>
                             <th className="text-start p-3 bg-custom-blue text-white border-r border-r-white last:border-r-0 text-sm">
-                                Publication
+                                Project Title
                             </th>
                             <th className="text-start p-3 bg-custom-blue text-white border-r border-r-white last:border-r-0 text-sm">
-                                Doi
+                                Staff
                             </th>
                             <th className="text-start p-3 bg-custom-blue text-white border-r border-r-white last:border-r-0 text-sm">
-                                SU Authors
+                                Collaborators
                             </th>
                             <th className="text-start p-3 bg-custom-blue text-white border-r border-r-white last:border-r-0 text-sm"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {publications.length > 0 &&
-                            publications.map((p) => (
-                                <tr key={p.id}>
+                        {grant.length > 0 &&
+                            grant.map((g) => (
+                                <tr key={g.project_code}>
                                     <td className="text-start p-3 bg-custom-blue/30 text-custom-blue">
-                                        {p.su_staff && p.su_staff.length > 0
-                                            ? p.su_staff[0].school_id
-                                            : "-"}
+                                        {g.sponsor}
                                     </td>
                                     <td className="text-start p-3 bg-custom-blue/30 text-custom-blue">
-                                        {p.title}
+                                        {g.project_title}
                                     </td>
                                     <td className="text-start p-3 bg-custom-blue/30 text-custom-blue">
-                                        {p.doi}
+                                        {g.su_staff && (
+                                            <Link
+                                                href={`/staff-profile/${g.su_staff.staff_id}`}
+                                            >
+                                                {g.su_staff.name}
+                                            </Link>
+                                        )}
                                     </td>
                                     <td className="text-start p-3 bg-custom-blue/30 text-custom-blue">
-                                        {p.su_staff &&
-                                            p.su_staff.map((s) => (
+                                        {g.collaborators &&
+                                            g.collaborators.map((s) => (
                                                 <Link
                                                     key={`staff-${
-                                                        s.staff_id + p.title
+                                                        s.staff_id +
+                                                        g.project_code
                                                     }`}
                                                     href={`/staff-profile/${s.staff_id}`}
                                                 >
@@ -132,7 +141,11 @@ export default function Page() {
                                             ))}
                                     </td>
                                     <td className="text-start p-3 bg-custom-blue/30 text-custom-blue">
-                                        <Link href={`/publications/${p.id}`}>
+                                        <Link
+                                            href={`/grants/${encodeProjectCode(
+                                                g.project_code
+                                            )}`}
+                                        >
                                             View
                                         </Link>
                                     </td>
@@ -140,13 +153,13 @@ export default function Page() {
                             ))}
                     </tbody>
                 </table>
-                {publications.length === 0 && (
+                {grant.length === 0 && (
                     <h5 className="my-5 text-3xl text-center text-slate-400 font-bold">
                         {" "}
                         No matching result. Try to use different keyword.{" "}
                     </h5>
                 )}
             </div>
-        </>
+        </main>
     );
 }

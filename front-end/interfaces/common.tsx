@@ -50,6 +50,17 @@ interface Publication {
     isbn: string | null;
 }
 
+interface Grant {
+    project_code: string;
+    su_staff: Staff;
+    collaborators: Staff[];
+    project_title: string;
+    grant_name: string;
+    project_start_date: string;
+    project_end_date: string;
+    sponsor: string;
+}
+
 export type {
     Staff,
     Publisher,
@@ -57,4 +68,5 @@ export type {
     User,
     Department,
     Publication,
+    Grant,
 };

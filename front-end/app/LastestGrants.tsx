@@ -35,10 +35,11 @@ export default function LatestGrant() {
                         name: staff.name,
                         staff_id: staff.staff_id,
                     })),
-                    project_end_date: d.project_end_date,
+                    project_start_date: d.project_start_date,
                 };
             });
             setLatestGrants(formattedData);
+            console.log(data, "grants");
         };
         fetchData().catch(console.error);
     }, []);
@@ -53,7 +54,7 @@ export default function LatestGrant() {
                         "Project",
                         "SU Staff",
                         "Collaborators",
-                        "End Date",
+                        "Start Date",
                     ]}
                     data={latestGrants}
                     type="grants"

@@ -22,12 +22,20 @@ class PublicationFilter(django_filters.FilterSet):
     latest_publication = django_filters.NumberFilter(method="filter_latest_publication")
     published_year = django_filters.DateFromToRangeFilter(field_name="published_year")
     title = django_filters.CharFilter(field_name="title", lookup_expr="icontains")
+    id = django_filters.NumberFilter(method="filter_by_id")
 
     def filter_latest_publication(self, queryset, name, value):
         # Check if the 'latest_publication' query parameter is provided
         if value:
             # Filter the queryset to get the top 'value' number of publications based on the 'published_year' field in descending order
             queryset = queryset.order_by("-published_year")[:value]
+
+        return queryset
+
+    def filter_by_id(self, queryset, name, value):
+        if value:
+            queryset = queryset.filter(id=value)
+            return queryset
 
         return queryset
 
@@ -38,12 +46,14 @@ class PublicationFilter(django_filters.FilterSet):
 
 class GrantFilter(django_filters.FilterSet):
     latest_grant = django_filters.NumberFilter(method="filter_latest_grant")
-    project_end_date = django_filters.DateFromToRangeFilter(
-        field_name="project_end_date"
+    project_start_date = django_filters.DateFromToRangeFilter(
+        field_name="project_start_date"
     )
+    project_title = django_filters.CharFilter(field_name="project_title", lookup_expr="icontains")
+    project_code = django_filters.CharFilter(field_name="project_code", lookup_expr="iexact")
 
     def filter_latest_grant(self, queryset, name, value):
         if value:
-            queryset = queryset.order_by("-project_end_date")[:value]
+            queryset = queryset.order_by("-project_start_date")[:value]
 
         return queryset

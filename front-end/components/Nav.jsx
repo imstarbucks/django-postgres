@@ -14,7 +14,10 @@ const Nav = () => {
                 <Link href={"/publications"}>Publications</Link>
                 <Link href={"/grants"}>Grants</Link>
                 <Link href={"/staff-profile"}>Staff Profile</Link>
-                <Link href={"/admin"} className="flex items-center gap-2">
+                <Link
+                    href={"http://localhost:8000/admin"}
+                    className="flex items-center gap-2"
+                >
                     <span>Login</span>
                     <PersonIcon className="border border-white rounded-full flex w-5 h-5"></PersonIcon>
                 </Link>

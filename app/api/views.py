@@ -6,14 +6,16 @@ from .serializers import (
     PublicationSerializer,
     GrantSerializer,
     SourceTitleCountSerializer,
+	PublicationCountSerializer
 )
 from .filters import SU_StaffFilter, PublicationFilter, GrantFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, views
 from rest_framework.response import Response
 # from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count, Q
+from django.db.models.functions import ExtractYear
 
 
 class SU_StaffViewSet(viewsets.ModelViewSet):
@@ -105,3 +107,17 @@ class PublicationSourceAPIView(generics.ListAPIView):
                 response_data.append({'source': source, 'count': count['count']})
 
         return Response(response_data)
+
+class PublicationSourceYearCountAPIView(views.APIView):
+    def get(self, request):
+        queryset = Publication.objects.exclude(published_year__isnull=True).annotate(
+            year=ExtractYear('published_year')
+        ).values('year').annotate(
+            scopus=Count('id', filter=Q(publication_source='SCOPUS') | Q(publication_source='SCOPUS & WOS')),
+            wos=Count('id', filter=Q(publication_source='WOS') | Q(publication_source='SCOPUS & WOS')),
+            total=Count('id')
+        ).order_by('year')
+
+        serializer = PublicationCountSerializer(queryset, many=True)
+
+        return Response(serializer.data)

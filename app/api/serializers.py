@@ -111,3 +111,9 @@ class PublicationSourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publication
         fields = ['publication_source']
+
+class PublicationCountSerializer(serializers.Serializer):
+    year = serializers.IntegerField()
+    scopus = serializers.IntegerField()
+    wos = serializers.IntegerField()
+    total = serializers.IntegerField()

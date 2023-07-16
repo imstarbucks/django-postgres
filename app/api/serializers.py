@@ -37,6 +37,11 @@ class SchoolSerializer(serializers.ModelSerializer):
         model = School
         fields = ("school_id", "school_name")
 
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = ("dpet_id", "dpet_name")
+
 
 class PureSU_StaffSerializer(serializers.ModelSerializer):
     school_id = serializers.SerializerMethodField()
@@ -55,6 +60,7 @@ class PureSU_StaffSerializer(serializers.ModelSerializer):
 
 class SU_StaffSerializer(serializers.ModelSerializer):
     school_id = serializers.SerializerMethodField()
+    dpet_id = DepartmentSerializer(read_only=True)
     user = UserSerializer(read_only=True)
 
     def get_school_id(self, obj):

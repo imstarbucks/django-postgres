@@ -22,8 +22,8 @@ class SU_StaffViewSet(viewsets.ModelViewSet):
     queryset = SU_Staff.objects.all()
     serializer_class = SU_StaffSerializer
     filterset_class = SU_StaffFilter
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -38,6 +38,8 @@ class PublicationViewSet(viewsets.ModelViewSet):
     queryset = Publication.objects.all()
     serializer_class = PublicationSerializer
     filterset_class = PublicationFilter
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -47,14 +49,14 @@ class PublicationViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = [TokenAuthentication]
 
 
 class GrantViewSet(viewsets.ModelViewSet):
     queryset = Grant.objects.all()
     serializer_class = GrantSerializer
     filterset_class = GrantFilter
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -67,6 +69,8 @@ class GrantViewSet(viewsets.ModelViewSet):
 
 class SourceTitleCountAPIView(generics.ListAPIView):
     serializer_class = SourceTitleCountSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def get_queryset(self):
         queryset = Publication.objects.values("source_title").annotate(
@@ -83,6 +87,8 @@ class SourceTitleCountAPIView(generics.ListAPIView):
 class PublicationSourceAPIView(generics.ListAPIView):
     queryset = Publication.objects.all()
     serializer_class = PublicationSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -109,6 +115,9 @@ class PublicationSourceAPIView(generics.ListAPIView):
         return Response(response_data)
 
 class PublicationSourceYearCountAPIView(views.APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
     def get(self, request):
         queryset = Publication.objects.exclude(published_year__isnull=True).annotate(
             year=ExtractYear('published_year')

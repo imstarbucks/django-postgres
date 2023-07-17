@@ -23,13 +23,14 @@ docker compose up d --build
 Superuser
 
 username: root
+
 password: root
 
 Staff Login
 
-username: <Staff ID>
+username: Staff ID
 
-password: init<Staff ID>
+password: init+Staff ID
 
 ## REST API
 

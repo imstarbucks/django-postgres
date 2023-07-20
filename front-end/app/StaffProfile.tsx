@@ -65,10 +65,11 @@ export default function StaffProfile() {
                 modules={[Navigation, Autoplay]}
                 autoplay
                 navigation
+                loop
             >
                 <button
                     ref={nextBtnRef}
-                    className="absolute w-[50px] h-[50px] top-0 bottom-0 right-0 left-auto m-auto border-custom-blue border rounded-full flex justify-center items-center z-50 hover:bg-white"
+                    className="absolute w-[50px] h-[50px] top-0 bottom-0 right-0 left-auto m-auto border-custom-blue border rounded-full flex justify-center items-center z-50 hover:bg-secondary hover:scale-90 ease-in-out duration-300"
                     onClick={handleClickNext}
                 >
                     <ChevronRightIcon
@@ -79,7 +80,7 @@ export default function StaffProfile() {
                 </button>
                 <button
                     ref={prevBtnRef}
-                    className="absolute w-[50px] h-[50px] top-0 bottom-0 right-auto left-0 m-auto border-custom-blue border rounded-full flex justify-center items-center z-50 hover:bg-white"
+                    className="absolute w-[50px] h-[50px] top-0 bottom-0 right-auto left-0 m-auto border-custom-blue border rounded-full flex justify-center items-center z-50 hover:bg-secondary hover:scale-90 ease-in-out duration-300"
                     onClick={handleClickPrev}
                 >
                     <ChevronLeftIcon
@@ -132,7 +133,9 @@ export default function StaffProfile() {
                                     <div>
                                         Phone:
                                         <Link href={`tel:${s.user.phone}`}>
-                                            {s.user.phone ? s.user.phone : "-"}
+                                            {s.user.phone
+                                                ? s.user.phone
+                                                : "012-456666"}
                                         </Link>
                                     </div>
                                     <Link

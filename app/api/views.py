@@ -1,8 +1,9 @@
-from su_staffs.models import SU_Staff
+from su_staffs.models import SU_Staff, School
 from publications.models import Publication
 from grants.models import Grant
 from .serializers import (
     SU_StaffSerializer,
+	SchoolSerializer,
     PublicationSerializer,
     GrantSerializer,
     SourceTitleCountSerializer,
@@ -17,6 +18,13 @@ from rest_framework.response import Response
 from django.db.models import Count, Q
 from django.db.models.functions import ExtractYear
 
+class SchoolsViewSet(viewsets.ModelViewSet):
+    queryset = School.objects.all()
+    serializer_class = SchoolSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.exclude(school_id="NO_SCHOOL")
 
 class SU_StaffViewSet(viewsets.ModelViewSet):
     queryset = SU_Staff.objects.all()

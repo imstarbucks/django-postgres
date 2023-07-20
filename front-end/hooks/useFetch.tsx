@@ -2,7 +2,7 @@ const useFetch = async (slug: string, params: string = "") => {
     const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/${slug}/${params}`;
     console.log(API_ENDPOINT);
     const res = await fetch(`${API_ENDPOINT}`, {
-        cache: "no-store",
+        cache: "no-cache",
         headers: {
             Authorization: `Token ${process.env.NEXT_PUBLIC_API_TOKEN}`,
         },

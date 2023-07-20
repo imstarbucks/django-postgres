@@ -1,14 +1,20 @@
 interface Staff {
     staff_id: string;
     name: string;
-    school_id: string;
+    school_id: School;
+    dpet_id: Department;
+    title: string;
+    user: User;
 }
 
 interface User {
-    email: string;
-    phone: string;
-    biography: string;
-    profile_image: string;
+    email?: string;
+    phone?: string;
+    biography?: string;
+    profile_image?: string;
+    cv?: string;
+    linkedin_link?: string;
+    scopus_link?: string;
 }
 
 interface Publisher {
@@ -23,6 +29,11 @@ interface PublicationLink {
 interface Department {
     dpet_id: string;
     dpet_name: string;
+}
+
+interface School {
+    school_id: string;
+    school_name: string;
 }
 
 interface Publication {
@@ -67,6 +78,7 @@ export type {
     PublicationLink,
     User,
     Department,
+    School,
     Publication,
     Grant,
 };

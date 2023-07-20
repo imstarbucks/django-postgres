@@ -12,6 +12,7 @@ class SU_StaffFilter(django_filters.FilterSet):
         field_name="dpet_id__school_id__school_id", lookup_expr="iexact"
     )
     staff_id = django_filters.CharFilter(field_name="staff_id", lookup_expr="iexact")
+    name = django_filters.CharFilter(field_name="name", lookup_expr='icontains')
 
     class Meta:
         model = SU_Staff
@@ -23,6 +24,9 @@ class PublicationFilter(django_filters.FilterSet):
     published_year = django_filters.DateFromToRangeFilter(field_name="published_year")
     title = django_filters.CharFilter(field_name="title", lookup_expr="icontains")
     id = django_filters.NumberFilter(method="filter_by_id")
+    su_staff = django_filters.CharFilter(field_name="su_staff__staff_id", lookup_expr='iexact')
+    school_id = django_filters.CharFilter(field_name="su_staff__dpet_id__school_id")
+    staff_id = django_filters.CharFilter(field_name="su_staff__staff_id")
 
     def filter_latest_publication(self, queryset, name, value):
         # Check if the 'latest_publication' query parameter is provided
@@ -36,7 +40,6 @@ class PublicationFilter(django_filters.FilterSet):
         if value:
             queryset = queryset.filter(id=value)
             return queryset
-
         return queryset
 
     class Meta:
@@ -51,6 +54,7 @@ class GrantFilter(django_filters.FilterSet):
     )
     project_title = django_filters.CharFilter(field_name="project_title", lookup_expr="icontains")
     project_code = django_filters.CharFilter(field_name="project_code", lookup_expr="iexact")
+    sponsor = django_filters.CharFilter(field_name="sponsor__sponsor_id", lookup_expr="iexact")
 
     def filter_latest_grant(self, queryset, name, value):
         if value:

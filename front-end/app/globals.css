@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.rs-dropdown-menu {
+    max-height: 400px;
+    overflow-y: auto;
+}

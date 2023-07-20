@@ -59,16 +59,9 @@ class PureSU_StaffSerializer(serializers.ModelSerializer):
 
 
 class SU_StaffSerializer(serializers.ModelSerializer):
-    school_id = serializers.SerializerMethodField()
+    school_id = SchoolSerializer(read_only=True)
     dpet_id = DepartmentSerializer(read_only=True)
     user = UserSerializer(read_only=True)
-
-    def get_school_id(self, obj):
-        return (
-            obj.dpet_id.school_id.school_id
-            if obj.dpet_id and obj.dpet_id.school_id
-            else None
-        )
 
     class Meta:
         model = SU_Staff

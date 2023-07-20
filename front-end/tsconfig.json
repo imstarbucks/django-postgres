@@ -29,7 +29,7 @@
         "**/*.tsx",
         ".next/types/**/*.ts",
         "app/page.tsx",
-        "components/Table.jsx"
+        "components/CustomTable.jsx"
     ],
     "exclude": ["node_modules"]
 }

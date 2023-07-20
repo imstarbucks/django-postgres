@@ -1,7 +1,7 @@
 import useFetch from "@/hooks/useFetch";
 import { useState, useEffect } from "react";
 import { Staff, Publisher, PublicationLink } from "@/interfaces/common";
-import Table from "@/components/Table";
+import CustomTable from "@/components/CustomTable";
 
 interface LatestPublication {
     id: number;
@@ -15,6 +15,7 @@ export default function LatestPublications() {
     const [latestPublications, setLatestPublications] = useState<
         LatestPublication[]
     >([]);
+    const [isLoading, setIsloading] = useState(true);
     useEffect(() => {
         const fetchData = async () => {
             const data = await useFetch(
@@ -32,30 +33,23 @@ export default function LatestPublications() {
                         name: staff.name,
                         staff_id: staff.staff_id,
                     })),
-                    date: d.published_year,
+                    date: d.published_year ? d.published_year : "-",
                 };
             });
             setLatestPublications(formattedData);
+            setIsloading(!isLoading);
         };
         fetchData().catch(console.error);
     }, []);
 
     return (
         <section className="container mx-auto my-12 lg:max-w-5xl">
-            {latestPublications.length > 0 && (
-                <Table
-                    title={"Recent Publications"}
-                    tableTitle={[
-                        "School",
-                        "Publication",
-                        "Authors",
-                        "Date",
-                        "Link",
-                    ]}
-                    data={latestPublications}
-                    type="publications"
-                ></Table>
-            )}
+            <CustomTable
+                title={"Recent Publications"}
+                data={latestPublications}
+                type="publications"
+                isLoading={isLoading}
+            ></CustomTable>
         </section>
     );
 }

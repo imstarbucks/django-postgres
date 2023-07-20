@@ -20,6 +20,7 @@ import {
     Publication,
 } from "@/interfaces/common";
 import SectionHeader from "@/components/SectionHeader";
+import AccentButton from "@/components/Button";
 
 interface PublicationSourceYear {
     year: number;
@@ -78,13 +79,13 @@ export default function SectionCharts() {
             <Tabs.Root defaultValue="pieChart">
                 <Tabs.List className="flex gap-5" aria-label="Pie Chart">
                     <Tabs.Trigger
-                        className="rounded-sm border border-custom-blue data-[state=active]:bg-custom-blue data-[state=active]:text-white p-2"
+                        className="p-2 rounded text-custom-blue bg-secondary ease-in-out duration-300 hover:bg-accent hover:text-secondary hover:border-accent data-[state=active]:bg-accent data-[state=active]:text-secondary  data-[state=active]:border-accent"
                         value="pieChart"
                     >
                         Pie Chart
                     </Tabs.Trigger>
                     <Tabs.Trigger
-                        className="rounded-sm border border-custom-blue data-[state=active]:bg-custom-blue data-[state=active]:text-white p-2"
+                        className="p-2 rounded text-custom-blue bg-secondary ease-in-out duration-300 hover:bg-accent hover:text-secondary hover:border-accent data-[state=active]:bg-accent data-[state=active]:text-secondary  data-[state=active]:border-accent"
                         value="barChart"
                     >
                         Bar Chart

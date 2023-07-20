@@ -2,7 +2,7 @@ import useFetch from "@/hooks/useFetch";
 import { useState, useEffect } from "react";
 
 import { Staff, Publisher, PublicationLink } from "@/interfaces/common";
-import Table from "@/components/Table";
+import CustomTable from "@/components/CustomTable";
 
 interface LatestGrant {
     project_code: string;
@@ -18,6 +18,8 @@ interface LatestGrant {
 
 export default function LatestGrant() {
     const [latestGrants, setLatestGrants] = useState<LatestGrant[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
         const fetchData = async () => {
             const data = await useFetch("grants", "?latest_grant=5");
@@ -25,10 +27,10 @@ export default function LatestGrant() {
             const formattedData = data.map((d: LatestGrant) => {
                 return {
                     id: d.project_code,
-                    publication_title: d.project_title,
+                    project_title: d.project_title,
                     sponsor: d.sponsor,
                     su_staff: {
-                        name: d.su_staff?.name,
+                        name: d.su_staff ? d.su_staff.name : "-",
                         staff_id: d.su_staff?.staff_id,
                     },
                     collaborators: d.collaborators.map((staff) => ({
@@ -39,27 +41,19 @@ export default function LatestGrant() {
                 };
             });
             setLatestGrants(formattedData);
-            console.log(data, "grants");
+            setIsLoading(!isLoading);
         };
         fetchData().catch(console.error);
     }, []);
 
     return (
         <section className="container mx-auto my-12 lg:max-w-5xl">
-            {latestGrants.length > 0 && (
-                <Table
-                    title={"Recent Awarded Grants"}
-                    tableTitle={[
-                        "Sponsor",
-                        "Project",
-                        "SU Staff",
-                        "Collaborators",
-                        "Start Date",
-                    ]}
-                    data={latestGrants}
-                    type="grants"
-                ></Table>
-            )}
+            <CustomTable
+                title={"Recent Awarded Grants"}
+                data={latestGrants}
+                type="grants"
+                isLoading={isLoading}
+            ></CustomTable>
         </section>
     );
 }

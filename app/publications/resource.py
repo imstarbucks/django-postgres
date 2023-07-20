@@ -35,6 +35,26 @@ from su_staffs.models import SU_Staff
 
 
 #         return authors
+class ExportStaffIDManyToManyWidget(widgets.ManyToManyWidget):
+    def render(self, value, obj=None):
+        if value is None:
+            return None
+        return "; ".join([str(item.staff_id) for item in value.all()])
+
+class ExportStaffNameManyToManyWidget(widgets.ManyToManyWidget):
+    def render(self, value, obj=None):
+        if value is None:
+            return None
+        return "; ".join([str(item.name) for item in value.all()])
+
+class ExportSchool(widgets.ForeignKeyWidget):
+    def render(self, value, obj=None):
+        if value is None:
+            return None
+        staff = value.first()
+        if staff and staff.dpet_id:
+            return staff.dpet_id.school_id.school_id
+        return None
 
 class CustomManyToManyAuthorsWidget(ManyToManyWidget):
     def clean(self, value, row=None, **kwargs):
@@ -268,3 +288,42 @@ class WOSPublicationResource(resources.ModelResource):
         fields = ('doi', 'doc_types', 'title', 'source_title')
         exclude = ("id")
         import_id_fields = ["doi", "title"]
+
+class ExportPublicationResource(resources.ModelResource):
+    doi = fields.Field(column_name='DOI', attribute='doi')
+    staff_id = fields.Field(column_name="Staff ID", attribute='su_staff', widget=ExportStaffIDManyToManyWidget(SU_Staff, field="staff_id"))
+    staff = fields.Field(column_name="Staff", attribute='su_staff', widget=ExportStaffNameManyToManyWidget(SU_Staff, field="name"))
+    school = fields.Field(column_name="School",attribute='su_staff', widget=ExportSchool(SU_Staff, field="su_staff"))
+    authors = fields.Field(column_name='Authors', attribute='authors')
+    industry = fields.Field(column_name="Industry", attribute='industry')
+    international = fields.Field(column_name="International", attribute='international')
+    national = fields.Field(column_name="Industry", attribute='national')
+    title = fields.Field(column_name='Document Title', attribute='title')
+    source_title = fields.Field(column_name='Source Title', attribute='source_title')
+    editors = fields.Field(column_name='Book Editors', attribute='editors')
+    publisher_name = fields.Field(column_name='Publisher', attribute='publisher_name',
+                                widget=CustomPublisherWidget(Publisher, field='publisher_name'))
+    doc_types = fields.Field(column_name='Document Type', attribute='doc_types')
+    publication_source = fields.Field(column_name="Scopus/Wos Classification", attribute="publication_source")
+    volume = fields.Field(column_name='Volume', attribute='volume')
+    issue = fields.Field(column_name='Issue', attribute='issue')
+    page_start = fields.Field(column_name='Start Page', attribute='page_start')
+    page_end = fields.Field(column_name='Page end', attribute='page_end')
+    published_year = fields.Field(column_name='Publication Year', attribute='published_year', widget=DateWidget())
+    issn = fields.Field(column_name='ISSN', attribute='issn')
+    eissn = fields.Field(column_name='eISSN', attribute='eissn')
+    isbn = fields.Field(column_name='ISBN', attribute='isbn')
+    link_to_evidence = fields.Field(column_name="Link to evidence", attribute="scopus_publication__scopus_link")
+    remarks = fields.Field(column_name="Remarks", attribute="scopus_publication__eid")
+
+    def get_staff_id(self, publication):
+        # This method retrieves the list of staff IDs associated with each publication.
+        return "; ".join(str(staff.staff_id) for staff in publication.su_staff.all())
+
+    def get_staff_names(self, publication):
+        # This method retrieves the list of staff names associated with each publication.
+        return "; ".join(staff.name for staff in publication.su_staff.all())
+    class Meta:
+        model = Publication
+        fields = ('doi', 'publisher_name', 'doc_types')
+        exclude = ("id")

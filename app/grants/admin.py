@@ -17,6 +17,7 @@ class GrantAdmin(ImportExportMixin, admin.ModelAdmin):
                      'su_staff__name', 'su_staff__staff_id']
     search_help_text = "Searchable: Project Code, Project Title, SU Staff name"
     autocomplete_fields = ['su_staff']
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.user.is_superuser:

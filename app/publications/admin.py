@@ -3,7 +3,7 @@ from rangefilter.filters import DateRangeFilterBuilder
 from import_export.admin import ImportExportMixin, ExportMixin
 from su_staffs.models import Department, School
 from .models import Publisher, Publication, ScopusPublication, WOSPublication
-from .resource import ScopusPublicationResource, WOSPublicationResource
+from .resource import ScopusPublicationResource, WOSPublicationResource, ExportPublicationResource
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
@@ -39,7 +39,7 @@ class PublicationAdmin(ImportExportMixin,admin.ModelAdmin):
     list_filter = ['publication_source', SchoolFilter,('published_year', DateRangeFilterBuilder())]
     autocomplete_fields = ["scopus_publication", "wos_publication"]
     filter_horizontal = ('su_staff',)
-    resource_classes = [ScopusPublicationResource, WOSPublicationResource]
+    resource_classes = [ScopusPublicationResource, WOSPublicationResource, ExportPublicationResource]
     readonly_fields = ["publication_source"]
     ordering = ["published_year"]
 

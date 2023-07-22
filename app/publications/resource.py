@@ -7,34 +7,7 @@ from import_export import fields
 from .models import Publisher, Publication, ScopusPublication, WOSPublication
 from su_staffs.models import SU_Staff
 
-# class CustomManyToManyAuthorsWidget(ManyToManyWidget):
-#     def clean(self, value, row=None, **kwargs):
-#         if not value:
-#             return self.model.objects.none()
 
-#         records = value.split(',')
-#         author_names = []
-
-#         for record in records:
-#             try:
-#                 author_format = record.strip()
-#                 author_names.append(author_format)
-
-#             except ValueError:
-#                 # Skip empty records or records with incorrect format
-#                 pass
-
-#         # Query the model to retrieve the staff author name based on the filtered staff author_name
-#         authors = self.model.objects.none()
-#         for name in author_names:
-#             # Perform fuzzy matching using TrigramSimilarity
-#             matched_authors = self.model.objects.annotate(similarity=TrigramSimilarity('author_name', name)).filter(similarity__gt=0.7)
-#             if matched_authors.exists():
-#                 best_match = matched_authors.order_by('-similarity').first()
-#                 authors |= self.model.objects.filter(author_name=best_match.author_name)
-
-
-#         return authors
 class ExportStaffIDManyToManyWidget(widgets.ManyToManyWidget):
     def render(self, value, obj=None):
         if value is None:
@@ -313,7 +286,7 @@ class ExportPublicationResource(resources.ModelResource):
     issn = fields.Field(column_name='ISSN', attribute='issn')
     eissn = fields.Field(column_name='eISSN', attribute='eissn')
     isbn = fields.Field(column_name='ISBN', attribute='isbn')
-    link_to_evidence = fields.Field(column_name="Link to evidence", attribute="scopus_publication__scopus_link")
+    link_to_evidence = fields.Field(column_name="Link to evidence", attribute="scopus_publication__link")
     remarks = fields.Field(column_name="Remarks", attribute="scopus_publication__eid")
 
     def get_staff_id(self, publication):

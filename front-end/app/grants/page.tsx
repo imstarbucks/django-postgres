@@ -28,7 +28,7 @@ export default function Page() {
             const uniqueSponsors = sponsorsArr.filter(
                 (sponsor, index, arr) => arr.indexOf(sponsor) === index
             );
-            // console.log(data);
+            console.log(data);
             setGrant(data);
             setOgData(data);
             setSponsors(uniqueSponsors);

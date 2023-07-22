@@ -187,7 +187,11 @@ const GrantTable = ({ defaultData, isLoading }) => {
                         <Cell dataKey={"id"}>
                             {(rowData, rowIndex) => {
                                 return (
-                                    <Link href={`/grants/${rowData.id}`}>
+                                    <Link
+                                        href={`/grants/${encodeURIComponent(
+                                            rowData.project_code
+                                        )}`}
+                                    >
                                         View
                                     </Link>
                                 );

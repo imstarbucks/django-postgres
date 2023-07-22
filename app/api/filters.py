@@ -24,7 +24,6 @@ class PublicationFilter(django_filters.FilterSet):
     published_year = django_filters.DateFromToRangeFilter(field_name="published_year")
     title = django_filters.CharFilter(field_name="title", lookup_expr="icontains")
     id = django_filters.NumberFilter(method="filter_by_id")
-    su_staff = django_filters.CharFilter(field_name="su_staff__staff_id", lookup_expr='iexact')
     school_id = django_filters.CharFilter(field_name="su_staff__dpet_id__school_id")
     staff_id = django_filters.CharFilter(field_name="su_staff__staff_id")
 
